@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
 
     GameObject[] buildings;
-    List<GameObject> buildingsToPlace;
+    Dictionary<GameObject, int> buildingsToPlace;
     List<Layer> layers;
     public uint TotalScore
     {
@@ -41,33 +41,30 @@ public class GameManager : MonoBehaviour
     void StartGame()
     {
         buildings = Resources.LoadAll<GameObject>("Buildings");
-        buildingsToPlace = new List<GameObject>();
-        GetPlacementList(2);
-        foreach (GameObject building in buildingsToPlace)
-        {
-            Debug.Log(building);
-        }
+        buildingsToPlace = new Dictionary<GameObject, int>();
     }
 
     // Creates a list of buildings the player will need to place
-    void GetPlacementList(int numTypes)
+    void GetPlacementList(int numTypes, int totalBuildings)
     {
         List<GameObject> possibleBuildings = new List<GameObject>(buildings);
-        for (int i = 0; i < numTypes; i++)
+        int remainingBuildings = totalBuildings;
+        for (int i = numTypes; i > 0; i--)
         {
             int buildingIndex = Random.Range(0, possibleBuildings.Count);
-            buildingsToPlace.Add(possibleBuildings[buildingIndex]);
+            GameObject building = possibleBuildings[buildingIndex];
+            buildingsToPlace[building] = 0;
+            int amount = (i == 1) ? remainingBuildings : Random.Range(1, remainingBuildings + 1);
+            buildingsToPlace[building] = amount;
+            remainingBuildings -= amount;
             possibleBuildings.RemoveAt(buildingIndex);
         }
     }
 
+
     // Returns true if all buildings on the current layer are settled
     bool LayerFinished()
     {
-        // if no buildings have been placed, return false
-        if(layers[-1].PlacedBuildingsCount == 0){
-            return false;
-        }
 
         // if the latest layer's number of placed buildings is equal to the total number placed buldings, return true
         Layer latestLayer = layers[layers.Count - 1];
@@ -85,27 +82,27 @@ class Layer
 {
     List<Building> buildings;
 
-    public uint NumberOfBuildingsInLayer(){
-        return (uint)buildings.Count;;
+    public uint NumberOfBuildingsInLayer()
+    {
+        return (uint)buildings.Count; ;
     }
     public uint LayerScore
     {
-    // yoinks the score for the layer
+        // yoinks the score for the layer
         get { return LayerScore; }
-    
-    // Calculates the score for this layer
-        set {
+
+        // Calculates the score for this layer
+        set
+        {
             uint LayerScore = 0;
-            foreach(var building in buildings){
+            foreach (var building in buildings)
+            {
                 LayerScore += building.GetPoints();
             }
         }
     }
-    public uint PlacedBuildingsCount
-    {
-        get { return PlacedBuildingsCount; }
-        set { PlacedBuildingsCount = value; }
-    }
+    public uint PlacedBuildingsCount;
+
 
     bool IsSettled()
     {
@@ -113,9 +110,12 @@ class Layer
         return false;
     }
 
+
+
     // Disables physics for this layer
     void Deactivate()
     {
 
     }
 }
+
