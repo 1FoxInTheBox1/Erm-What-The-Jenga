@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using ExtensionMethods;
 public class Building : MonoBehaviour
 {
     public float points;
@@ -66,18 +66,18 @@ public class Building : MonoBehaviour
     void AdjustScale()
     {
         float scaleInput = Input.GetAxis("Mouse ScrollWheel");
-        transform.localScale += new Vector3(scaleInput, scaleInput, scaleInput);
+        var newVector = transform.localScale + new Vector3(scaleInput, scaleInput, scaleInput);
+        newVector.Clamp(1, 10);
         // if its already too big or too small, then dont make it bigger or smaller.
-        if (transform.localScale < 2 || transform.localScale > 10){
-            return
-        }
-        // otherwise, make it bigger or smaller.
-        Vector3.ClampMagnitude(transform.localScale, 10);
+        transform.localScale = newVector;
     }
 
     // Each building needs its own way to get points
     // so we'll inherit from the building class and custom make a getpoints func
-    abstract uint GetPoints();
+    public virtual uint GetPoints(){
+        Debug.Log("You forgot to override GetPoints dummy!");
+        return 0;
+    }
 
     // Disables physics for this building
     void DeactivatePhysics()
