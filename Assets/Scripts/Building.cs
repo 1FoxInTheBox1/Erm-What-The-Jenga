@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ExtensionMethods;
-public class Building : MonoBehaviour
+using System.IO;
+using UnityEngine.EventSystems;
+
+public class Building : MonoBehaviour, IPointerDownHandler
 {
     public float points;
     public bool isPlaced;
+    public bool selected;
     private int curCollisions;
 
     private Rigidbody2D rb;
@@ -21,31 +25,53 @@ public class Building : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         sprite = GetComponent<SpriteRenderer>();
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
         rb.gravityScale = 0;
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        selected = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (selected)
+        {
+            if (!isPlaced)
+            {
+                FollowMouse();
+                if (curCollisions > 0)
+                {
+                    sprite.color = Color.red;
+                }
+                else
+                {
+                    sprite.color = Color.white;
+                }
+            }
+
+            AdjustScale();
+        } else
+        {
+
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        Building b = eventData.pointerCurrentRaycast.gameObject.GetComponent<Building>();
         if (!isPlaced)
         {
-            FollowMouse();
-            if (curCollisions > 0)
+            if (selected)
             {
-                sprite.color = Color.red;
-            }
-            else
+                if (curCollisions == 0)
+                {
+                    b.Place();
+                }
+            } else
             {
-                sprite.color = Color.white;
+                rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+                b.selected = true;
             }
         }
-        if (Input.GetAxis("Fire1") == 1 && curCollisions == 0)
-        {
-            Place();
-        }
-        
-        AdjustScale();
     }
 
     // Moves the building to the mouse position
@@ -57,13 +83,14 @@ public class Building : MonoBehaviour
     }
 
     // Places the building
-    void Place()
+    public void Place()
     {
         isPlaced = true;
-        rb.gravityScale = 1;
         rb.constraints = RigidbodyConstraints2D.None;
+        rb.gravityScale = 1;
         sprite.color = Color.white;
         col.isTrigger = false;
+        selected = false;
     }
 
     void AdjustScale()

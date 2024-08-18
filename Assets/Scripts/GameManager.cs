@@ -4,6 +4,7 @@ using System.Numerics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
@@ -29,6 +30,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Physics2DRaycaster physicsRaycaster = FindObjectOfType<Physics2DRaycaster>();
+        if (physicsRaycaster == null)
+        {
+            Camera.main.gameObject.AddComponent<Physics2DRaycaster>();
+        }
         StartGame();
     }
 
@@ -43,6 +49,7 @@ public class GameManager : MonoBehaviour
     {
         buildings = Resources.LoadAll<GameObject>("Buildings");
         currentLayer = GetPlacementList(2, 5);
+        currentLayer.DisplaySelectionBar();
     }
 
     // Creates a list of buildings the player will need to place
@@ -67,7 +74,7 @@ public class GameManager : MonoBehaviour
         {
             for (int i = 0; i < buildingQuantities[building]; i++)
             {
-                GameObject newBuilding = Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity);
+                GameObject newBuilding = Instantiate(building, new Vector3(200, 0, 0), Quaternion.identity);
                 newLayer.AddBuilding(newBuilding);
             }
         }
@@ -116,13 +123,6 @@ class Layer
     }
     public uint PlacedBuildingsCount;
 
-    public Layer (List<Building> buildings)
-    {
-        this.buildings = buildings;
-        LayerScore = 0;
-        PlacedBuildingsCount = 0;
-    }
-
     public Layer()
     {
         this.buildings = new List<Building>();
@@ -145,6 +145,14 @@ class Layer
     void Deactivate()
     {
 
+    }
+
+    public void DisplaySelectionBar()
+    {
+        for (int i = 0; i < buildings.Count; i++)
+        {
+            buildings[i].transform.position = new Vector3(-2 + i, -3, 0);
+        }
     }
 }
 
