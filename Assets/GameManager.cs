@@ -55,6 +55,7 @@ class Layer
 {
     List<Building> buildings;
 
+
     bool IsSettled()
     {
         return false;
@@ -66,6 +67,7 @@ class Layer
         return 0;
     }
 
+    // Disables physics for this layer
     void Deactivate()
     {
 
