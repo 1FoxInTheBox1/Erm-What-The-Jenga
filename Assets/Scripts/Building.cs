@@ -51,7 +51,11 @@ public class Building : MonoBehaviour, IPointerDownHandler
             AdjustScale();
         } else
         {
-
+            if (IsSettled() && isPlaced)
+            {
+                Debug.Log("Rigidbody is settled");
+                DeactivatePhysics();
+            }
         }
     }
 
@@ -113,17 +117,25 @@ public class Building : MonoBehaviour, IPointerDownHandler
     // Disables physics for this building
     void DeactivatePhysics()
     {
-
+        if (IsSettled()){
+            rb.gravityScale=0;
+        }
     }
 
     // Returns true if the building is "settled"
     bool IsSettled()
     {
-        return false;
+        float linearspeed = rb.velocity.magnitude;
+        float angularspeed = Mathf.Abs(rb.angularVelocity);
+        return linearspeed < 1 && angularspeed < 1;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.tag == "BuildingKillTrigger") {
+            Destroy(gameObject);
+            return;
+        }
         curCollisions++;
     }
 
