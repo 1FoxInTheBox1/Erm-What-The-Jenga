@@ -137,8 +137,12 @@ class Layer
 
     bool IsSettled()
     {
-        // TODO: Settled logic
-        return false;
+        foreach(var building in buildings){
+            if(!building.IsSettled()){
+                return false;
+            }
+        }
+        return true;
     }
 
     public void AddBuilding(GameObject building)
@@ -149,7 +153,9 @@ class Layer
     // Disables physics for this layer
     void DeactivatePhysics()
     {
-
+        if(IsSettled() && buildings.Count > 3){
+            buildings[buildings.Count-3].rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        }
     }
 
     public void DisplaySelectionBar()
