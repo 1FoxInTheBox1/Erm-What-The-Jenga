@@ -14,7 +14,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
     private int curCollisions;
     private float settleCounter = 0;
 
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     private Collider2D col;
     private Camera cam;
     private SpriteRenderer sprite;
@@ -120,12 +120,12 @@ public class Building : MonoBehaviour, IPointerDownHandler
     {
         if (IsSettled()){
             sprite.color = Color.blue;
-            rb.gravityScale=0;
+            //rb.constraints = RigidbodyConstraints2D.FreezeAll;
         }
     }
 
     // Returns true if the building is "settled"
-    bool IsSettled()
+    public bool IsSettled()
     {
         float linearspeed = rb.velocity.magnitude;
         float angularspeed = Mathf.Abs(rb.angularVelocity);
