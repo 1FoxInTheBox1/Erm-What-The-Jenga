@@ -65,7 +65,6 @@ public class GameManager : MonoBehaviour
     // Returns true if all buildings on the current layer are settled
     bool LayerFinished()
     {
-
         // if the latest layer's number of placed buildings is equal to the total number placed buldings, return true
         Layer latestLayer = layers[layers.Count - 1];
         uint latestLayerNumberOfBuildings = latestLayer.NumberOfBuildingsInLayer();
@@ -103,14 +102,11 @@ class Layer
     }
     public uint PlacedBuildingsCount;
 
-
     bool IsSettled()
     {
         // TODO: Settled logic
         return false;
     }
-
-
 
     // Disables physics for this layer
     void Deactivate()
