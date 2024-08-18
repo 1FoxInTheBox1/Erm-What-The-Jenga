@@ -7,13 +7,20 @@ public class Building : MonoBehaviour
 {
     public float points;
     public bool isPlaced;
+    private int curCollisions;
 
+    private Rigidbody2D rb;
     private Camera cam;
+    private SpriteRenderer sprite;
 
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
+        rb = GetComponent<Rigidbody2D>();
+        sprite = GetComponent<SpriteRenderer>();
+        rb.gravityScale = 0;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     // Update is called once per frame
@@ -22,12 +29,20 @@ public class Building : MonoBehaviour
         if (!isPlaced)
         {
             FollowMouse();
+            if (curCollisions > 0)
+            {
+                sprite.color = Color.red;
+            }
+            else
+            {
+                sprite.color = Color.white;
+            }
         }
-        Debug.Log(Input.GetAxis("Fire1"));
-        if (Input.GetAxis("Fire1") == 1)
+        if (Input.GetAxis("Fire1") == 1 && curCollisions == 0)
         {
-
+            Place();
         }
+        
         AdjustScale();
     }
 
@@ -42,7 +57,10 @@ public class Building : MonoBehaviour
     // Places the building
     void Place()
     {
-        
+        isPlaced = true;
+        rb.gravityScale = 1;
+        rb.constraints = RigidbodyConstraints2D.None;
+        sprite.color = Color.white;
     }
 
     void AdjustScale()
@@ -71,5 +89,15 @@ public class Building : MonoBehaviour
     bool IsSettled()
     {
         return false;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        curCollisions++;
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        curCollisions--;
     }
 }
