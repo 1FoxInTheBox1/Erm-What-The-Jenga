@@ -7,15 +7,18 @@ public class Building : MonoBehaviour
 {
     public float points;
     public bool isPlaced;
+    private int curCollisions;
 
     private Rigidbody2D rb;
     private Camera cam;
+    private SpriteRenderer sprite;
 
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
         rb = GetComponent<Rigidbody2D>();
+        sprite = GetComponent<SpriteRenderer>();
         rb.gravityScale = 0;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
@@ -27,8 +30,7 @@ public class Building : MonoBehaviour
         {
             FollowMouse();
         }
-        Debug.Log(Input.GetAxis("Fire1"));
-        if (Input.GetAxis("Fire1") == 1)
+        if (Input.GetAxis("Fire1") == 1 && curCollisions == 0)
         {
             Place();
         }
@@ -73,5 +75,15 @@ public class Building : MonoBehaviour
     bool IsSettled()
     {
         return false;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        curCollisions++;
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        curCollisions--;
     }
 }
