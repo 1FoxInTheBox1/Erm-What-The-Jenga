@@ -8,12 +8,16 @@ public class Building : MonoBehaviour
     public float points;
     public bool isPlaced;
 
+    private Rigidbody2D rb;
     private Camera cam;
 
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
+        rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 0;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     // Update is called once per frame
@@ -26,7 +30,7 @@ public class Building : MonoBehaviour
         Debug.Log(Input.GetAxis("Fire1"));
         if (Input.GetAxis("Fire1") == 1)
         {
-
+            Place();
         }
         AdjustScale();
     }
@@ -42,7 +46,9 @@ public class Building : MonoBehaviour
     // Places the building
     void Place()
     {
-        
+        isPlaced = true;
+        rb.gravityScale = 1;
+        rb.constraints = RigidbodyConstraints2D.None;
     }
 
     void AdjustScale()
