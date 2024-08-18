@@ -10,6 +10,7 @@ public class Building : MonoBehaviour
     private int curCollisions;
 
     private Rigidbody2D rb;
+    private Collider2D col;
     private Camera cam;
     private SpriteRenderer sprite;
 
@@ -18,6 +19,7 @@ public class Building : MonoBehaviour
     {
         cam = Camera.main;
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
         sprite = GetComponent<SpriteRenderer>();
         rb.gravityScale = 0;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -61,6 +63,7 @@ public class Building : MonoBehaviour
         rb.gravityScale = 1;
         rb.constraints = RigidbodyConstraints2D.None;
         sprite.color = Color.white;
+        col.isTrigger = false;
     }
 
     void AdjustScale()
@@ -68,16 +71,18 @@ public class Building : MonoBehaviour
         float scaleInput = Input.GetAxis("Mouse ScrollWheel");
         transform.localScale += new Vector3(scaleInput, scaleInput, scaleInput);
         // if its already too big or too small, then dont make it bigger or smaller.
+        /*
         if (transform.localScale < 2 || transform.localScale > 10){
-            return
+        return;
         }
+        */
         // otherwise, make it bigger or smaller.
         Vector3.ClampMagnitude(transform.localScale, 10);
     }
 
     // Each building needs its own way to get points
     // so we'll inherit from the building class and custom make a getpoints func
-    abstract uint GetPoints();
+    //abstract uint GetPoints();
 
     // Disables physics for this building
     void DeactivatePhysics()
@@ -91,12 +96,12 @@ public class Building : MonoBehaviour
         return false;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         curCollisions++;
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D other)
     {
         curCollisions--;
     }
