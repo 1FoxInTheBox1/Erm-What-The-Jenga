@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     {
         uint score = 0;
         foreach(var layer in layers){
-            score += layer.CalculateScore();
+            //score += layer.CalculateScore();
         }
         return score;
     }
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     // Returns true if all buildings on the current layer are settled
     bool LayerFinished()
     {
-        return buildings.count() == placedBuildingsCount;
+        return false;//buildings.count() == placedBuildingsCount;
     }
 
     void DeactivateLayer()
@@ -62,7 +62,7 @@ class Layer
     {
         get { return placedBuildingsCount; }
         set { placedBuildingsCount = value; }
-    };
+    }
 
     bool IsSettled()
     {
@@ -75,7 +75,7 @@ class Layer
     {
         uint score = 0;
         foreach(var building in buildings){
-            score += building.GetPoints();
+            //score += building.GetPoints();
         }
         return score;
     }

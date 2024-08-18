@@ -98,6 +98,10 @@ public class Building : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.tag == "BuildingKillTrigger") {
+            Destroy(gameObject);
+            return;
+        }
         curCollisions++;
     }
 
