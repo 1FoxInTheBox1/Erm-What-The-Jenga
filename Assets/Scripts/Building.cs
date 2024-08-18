@@ -46,6 +46,12 @@ public class Building : MonoBehaviour
         }
         
         AdjustScale();
+
+        if(IsSettled())
+        {
+            Debug.Log("Rigidbody is settled");
+            DeactivatePhysics();
+        }
     }
 
     // Moves the building to the mouse position
@@ -85,13 +91,17 @@ public class Building : MonoBehaviour
     // Disables physics for this building
     void DeactivatePhysics()
     {
-
+        if (IsSettled()){
+            rb.gravityScale=0;
+        }
     }
 
     // Returns true if the building is "settled"
     bool IsSettled()
     {
-        return false;
+        float linearspeed = rb.velocity.magnitude;
+        float angularspeed = Mathf.Abs(rb.angularVelocity);
+        return linearspeed < 1 && angularspeed < 1;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
