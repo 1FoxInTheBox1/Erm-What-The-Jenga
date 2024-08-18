@@ -4,13 +4,14 @@ using System.Numerics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 public class GameManager : MonoBehaviour
 {
-
     GameObject[] buildings;
-    Dictionary<GameObject, int> buildingsToPlace;
     List<Layer> layers;
+    Layer currentLayer;
     public uint TotalScore
     {
         get { return TotalScore; }
@@ -41,24 +42,36 @@ public class GameManager : MonoBehaviour
     void StartGame()
     {
         buildings = Resources.LoadAll<GameObject>("Buildings");
-        buildingsToPlace = new Dictionary<GameObject, int>();
+        currentLayer = GetPlacementList(2, 5);
     }
 
     // Creates a list of buildings the player will need to place
-    void GetPlacementList(int numTypes, int totalBuildings)
+    Layer GetPlacementList(int numTypes, int totalBuildings)
     {
+        Dictionary<GameObject, int> buildingQuantities = new Dictionary<GameObject, int>();
         List<GameObject> possibleBuildings = new List<GameObject>(buildings);
         int remainingBuildings = totalBuildings;
         for (int i = numTypes; i > 0; i--)
         {
             int buildingIndex = Random.Range(0, possibleBuildings.Count);
             GameObject building = possibleBuildings[buildingIndex];
-            buildingsToPlace[building] = 0;
+            buildingQuantities[building] = 0;
             int amount = (i == 1) ? remainingBuildings : Random.Range(1, remainingBuildings + 1);
-            buildingsToPlace[building] = amount;
+            buildingQuantities[building] = amount;
             remainingBuildings -= amount;
             possibleBuildings.RemoveAt(buildingIndex);
         }
+
+        Layer newLayer = new Layer();
+        foreach (GameObject building in buildingQuantities.Keys)
+        {
+            for (int i = 0; i < buildingQuantities[building]; i++)
+            {
+                GameObject newBuilding = Instantiate(building, new Vector3(0, 0, 0), Quaternion.identity);
+                newLayer.AddBuilding(newBuilding);
+            }
+        }
+        return newLayer;
     }
 
 
@@ -103,6 +116,19 @@ class Layer
     }
     public uint PlacedBuildingsCount;
 
+    public Layer (List<Building> buildings)
+    {
+        this.buildings = buildings;
+        LayerScore = 0;
+        PlacedBuildingsCount = 0;
+    }
+
+    public Layer()
+    {
+        this.buildings = new List<Building>();
+        LayerScore = 0;
+        PlacedBuildingsCount = 0;
+    }
 
     bool IsSettled()
     {
@@ -110,7 +136,10 @@ class Layer
         return false;
     }
 
-
+    public void AddBuilding(GameObject building)
+    {
+        buildings.Add(building.GetComponent<Building>());
+    }
 
     // Disables physics for this layer
     void Deactivate()
