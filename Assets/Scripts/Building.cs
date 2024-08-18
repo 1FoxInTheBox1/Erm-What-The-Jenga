@@ -12,6 +12,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
     public bool isPlaced;
     public bool selected;
     private int curCollisions;
+    private float settleCounter = 0;
 
     private Rigidbody2D rb;
     private Collider2D col;
@@ -127,7 +128,8 @@ public class Building : MonoBehaviour, IPointerDownHandler
     {
         float linearspeed = rb.velocity.magnitude;
         float angularspeed = Mathf.Abs(rb.angularVelocity);
-        return linearspeed < 1 && angularspeed < 1;
+        settleCounter = Mathf.Clamp(settleCounter + Time.deltaTime * ((linearspeed < 1 && angularspeed < 1) ? 1 : -1), 0, 1);
+        return settleCounter >= 1;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
