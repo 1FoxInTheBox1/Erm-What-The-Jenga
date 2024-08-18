@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ExtensionMethods;
-public class Building : MonoBehaviour
+using System.IO;
+using UnityEngine.EventSystems;
+
+public class Building : MonoBehaviour, IPointerDownHandler
 {
     public float points;
     public bool isPlaced;
+    public bool selected;
     private int curCollisions;
     private float settleCounter = 0;
 
@@ -22,29 +26,57 @@ public class Building : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         sprite = GetComponent<SpriteRenderer>();
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
         rb.gravityScale = 0;
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        selected = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (selected)
+        {
+            if (!isPlaced)
+            {
+                FollowMouse();
+                if (curCollisions > 0)
+                {
+                    sprite.color = Color.red;
+                }
+                else
+                {
+                    sprite.color = Color.white;
+                }
+            }
+
+            AdjustScale();
+        } else
+        {
+            if (IsSettled() && isPlaced)
+            {
+                //Debug.Log("Rigidbody is settled");
+                DeactivatePhysics();
+            }
+        }
+    }
+
+    // This is used to determine when a building has been clicked and to to perform the right actions when that happens
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        Building b = eventData.pointerCurrentRaycast.gameObject.GetComponent<Building>();
         if (!isPlaced)
         {
-            FollowMouse();
-            sprite.color = curCollisions > 0 ? Color.red : Color.white;
-        }
-        if (Input.GetAxis("Fire1") == 1 && curCollisions == 0)
-        {
-            Place();
-        }
-        
-        AdjustScale();
-
-        if(IsSettled())
-        {
-            Debug.Log("Rigidbody is settled");
-            DeactivatePhysics();
+            if (selected)
+            {
+                if (curCollisions == 0)
+                {
+                    b.Place();
+                }
+            } else
+            {
+                rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+                b.selected = true;
+            }
         }
     }
 
@@ -57,13 +89,14 @@ public class Building : MonoBehaviour
     }
 
     // Places the building
-    void Place()
+    public void Place()
     {
         isPlaced = true;
-        rb.gravityScale = 1;
         rb.constraints = RigidbodyConstraints2D.None;
+        rb.gravityScale = 1;
         sprite.color = Color.white;
         col.isTrigger = false;
+        selected = false;
     }
 
     void AdjustScale()
@@ -86,6 +119,7 @@ public class Building : MonoBehaviour
     void DeactivatePhysics()
     {
         if (IsSettled()){
+            sprite.color = Color.blue;
             rb.gravityScale=0;
         }
     }
@@ -95,7 +129,9 @@ public class Building : MonoBehaviour
     {
         float linearspeed = rb.velocity.magnitude;
         float angularspeed = Mathf.Abs(rb.angularVelocity);
-        settleCounter = Mathf.Clamp(settleCounter + Time.deltaTime * ((linearspeed < 1 && angularspeed < 1) ? 1 : -1), 0, 1);
+        if (isPlaced) {
+            settleCounter = Mathf.Clamp(settleCounter + Time.deltaTime * ((linearspeed < 1 && angularspeed < 1) ? 1 : -1), 0, 1);
+        }
         return settleCounter >= 1;
     }
 
