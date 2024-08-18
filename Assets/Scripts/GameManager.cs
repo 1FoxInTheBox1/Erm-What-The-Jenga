@@ -34,15 +34,19 @@ public class GameManager : MonoBehaviour
     }
 
     // Determines the score of the current layer
-    void ScoreLayer()
+    uint ScoreLayer()
     {
-
+        uint score = 0;
+        foreach(var layer in layers){
+            score += layer.CalculateScore();
+        }
+        return score;
     }
 
     // Returns true if all buildings on the current layer are settled
     bool LayerFinished()
     {
-        return false;
+        return buildings.count() == placedBuildingsCount;
     }
 
     void DeactivateLayer()
@@ -54,17 +58,26 @@ public class GameManager : MonoBehaviour
 class Layer
 {
     List<Building> buildings;
-
+    uint placedBuildingsCount
+    {
+        get { return placedBuildingsCount; }
+        set { placedBuildingsCount = value; }
+    };
 
     bool IsSettled()
     {
+        // TODO: Settled logic
         return false;
     }
 
     // Calculates the score for this layer
     uint CalculateScore()
     {
-        return 0;
+        uint score = 0;
+        foreach(var building in buildings){
+            score += building.GetPoints();
+        }
+        return score;
     }
 
     // Disables physics for this layer
