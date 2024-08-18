@@ -29,11 +29,20 @@ public class Building : MonoBehaviour
         if (!isPlaced)
         {
             FollowMouse();
+            if (curCollisions > 0)
+            {
+                sprite.color = Color.red;
+            }
+            else
+            {
+                sprite.color = Color.white;
+            }
         }
         if (Input.GetAxis("Fire1") == 1 && curCollisions == 0)
         {
             Place();
         }
+        
         AdjustScale();
     }
 
@@ -51,6 +60,7 @@ public class Building : MonoBehaviour
         isPlaced = true;
         rb.gravityScale = 1;
         rb.constraints = RigidbodyConstraints2D.None;
+        sprite.color = Color.white;
     }
 
     void AdjustScale()
