@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour
         return latestLayer.PlacedBuildingsCount == latestLayerNumberOfBuildings;
     }
 
+    // what is this?
     void DeactivateLayer()
     {
 
@@ -109,7 +110,7 @@ class Layer
     }
 
     // Disables physics for this layer
-    void Deactivate()
+    void DeactivatePhysics()
     {
 
     }
