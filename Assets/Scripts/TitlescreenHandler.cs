@@ -24,7 +24,7 @@ public class TitlescreenHandler : MonoBehaviour
 
     // Start is called before the first frame update
     void StartClicked() {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(1);
     }
     void SettingsClicked() {
         settingsPanel.SetActive(!settingsPanel.activeSelf);
