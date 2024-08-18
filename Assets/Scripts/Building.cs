@@ -6,17 +6,37 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
     public float points;
+    public bool isPlaced;
+
+    private Camera cam;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        cam = Camera.main;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!isPlaced)
+        {
+            FollowMouse();
+        }
+        Debug.Log(Input.GetAxis("Fire1"));
+        if (Input.GetAxis("Fire1") == 1)
+        {
+
+        }
         AdjustScale();
+    }
+
+    // Moves the building to the mouse position
+    void FollowMouse()
+    {
+        Vector3 pos = cam.ScreenToWorldPoint(Input.mousePosition);
+        pos.z = 0;
+        transform.position = pos;
     }
 
     // Places the building
