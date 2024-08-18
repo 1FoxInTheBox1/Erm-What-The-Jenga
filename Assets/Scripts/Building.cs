@@ -55,6 +55,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
         }
     }
 
+    // This is used to determine when a building has been clicked and to to perform the right actions when that happens
     public void OnPointerDown(PointerEventData eventData)
     {
         Building b = eventData.pointerCurrentRaycast.gameObject.GetComponent<Building>();

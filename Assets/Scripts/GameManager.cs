@@ -48,12 +48,17 @@ public class GameManager : MonoBehaviour
     void StartGame()
     {
         buildings = Resources.LoadAll<GameObject>("Buildings");
-        currentLayer = GetPlacementList(2, 5);
+        currentLayer = CreateLayer(2, 5);
         currentLayer.DisplaySelectionBar();
     }
 
-    // Creates a list of buildings the player will need to place
-    Layer GetPlacementList(int numTypes, int totalBuildings)
+    // Creates a new layer.
+    // numTypes is the number of different types of buildings.
+    // totalBuildings is the total number of buildings in the layer
+    // EX: If possible types are a, b, and c,
+    // then CreateLayer(2, 5) will choose 2 types of buildings and then instantiate a total of 5 buildings of those types,
+    // such as [a, a, b, b, b] or [c, b, b, b, b]
+    Layer CreateLayer(int numTypes, int totalBuildings)
     {
         Dictionary<GameObject, int> buildingQuantities = new Dictionary<GameObject, int>();
         List<GameObject> possibleBuildings = new List<GameObject>(buildings);
