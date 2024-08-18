@@ -55,8 +55,9 @@ public class Building : MonoBehaviour, IPointerDownHandler
             if (IsSettled() && isPlaced)
             {
                 //Debug.Log("Rigidbody is settled");
+                sprite.color = Color.blue;
                 DeactivatePhysics();
-            }
+            } 
         }
     }
 
@@ -119,13 +120,12 @@ public class Building : MonoBehaviour, IPointerDownHandler
     void DeactivatePhysics()
     {
         if (IsSettled()){
-            sprite.color = Color.blue;
             rb.gravityScale=0;
         }
     }
 
     // Returns true if the building is "settled"
-    bool IsSettled()
+    public bool IsSettled()
     {
         float linearspeed = rb.velocity.magnitude;
         float angularspeed = Mathf.Abs(rb.angularVelocity);

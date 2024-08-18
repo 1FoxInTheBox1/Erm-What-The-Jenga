@@ -10,6 +10,8 @@ using Vector3 = UnityEngine.Vector3;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject plane;
+
     GameObject[] buildings;
     List<Layer> layers;
     Layer currentLayer;
@@ -35,13 +37,20 @@ public class GameManager : MonoBehaviour
         {
             Camera.main.gameObject.AddComponent<Physics2DRaycaster>();
         }
+        layers = new List<Layer>();
         StartGame();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (currentLayer.IsSettled())
+        {
+            Instantiate(plane, new Vector3(0, 20, 0), Quaternion.identity);
+            currentLayer = CreateLayer(2, 5);
+            layers.Add(currentLayer);
+            currentLayer.DisplaySelectionBar();
+        }
     }
 
     // Starts a new game
@@ -49,6 +58,7 @@ public class GameManager : MonoBehaviour
     {
         buildings = Resources.LoadAll<GameObject>("Buildings");
         currentLayer = CreateLayer(2, 5);
+        layers.Add(currentLayer);
         currentLayer.DisplaySelectionBar();
     }
 
@@ -86,17 +96,8 @@ public class GameManager : MonoBehaviour
         return newLayer;
     }
 
-
-    // Returns true if all buildings on the current layer are settled
-    bool LayerFinished()
-    {
-        // if the latest layer's number of placed buildings is equal to the total number placed buldings, return true
-        Layer latestLayer = layers[layers.Count - 1];
-        uint latestLayerNumberOfBuildings = latestLayer.NumberOfBuildingsInLayer();
-        return latestLayer.PlacedBuildingsCount == latestLayerNumberOfBuildings;
-    }
-
-    // what is this?
+    // Disables physics for a layer
+    // TODO: remove this maybe? layer already has a DeactivatePhysics() method
     void DeactivateLayer()
     {
 
@@ -135,10 +136,15 @@ class Layer
         PlacedBuildingsCount = 0;
     }
 
-    bool IsSettled()
+    // Returns true if all blokcs in this layer are settled
+    public bool IsSettled()
     {
-        // TODO: Settled logic
-        return false;
+        bool result = true;
+        foreach (Building b in buildings)
+        {
+            result = result && b.IsSettled();
+        }
+        return result;
     }
 
     public void AddBuilding(GameObject building)
@@ -152,6 +158,8 @@ class Layer
 
     }
 
+    // Displays all the blocks to be placed in this layer at the bottom of the screen
+    // TODO: Replace this with some sort of UI element
     public void DisplaySelectionBar()
     {
         for (int i = 0; i < buildings.Count; i++)
