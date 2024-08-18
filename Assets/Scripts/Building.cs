@@ -67,16 +67,20 @@ public class Building : MonoBehaviour
     {
         float scaleInput = Input.GetAxis("Mouse ScrollWheel");
         transform.localScale += new Vector3(scaleInput, scaleInput, scaleInput);
+        // if its already too big or too small, then dont make it bigger or smaller.
+        if (transform.localScale < 2 || transform.localScale > 10){
+            return
+        }
+        // otherwise, make it bigger or smaller.
         Vector3.ClampMagnitude(transform.localScale, 10);
     }
 
-    void GetPoints()
-    {
-
-    }
+    // Each building needs its own way to get points
+    // so we'll inherit from the building class and custom make a getpoints func
+    abstract uint GetPoints();
 
     // Disables physics for this building
-    void Deactivate()
+    void DeactivatePhysics()
     {
 
     }
