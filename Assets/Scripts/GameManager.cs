@@ -135,16 +135,23 @@ class Layer
         PlacedBuildingsCount = 0;
     }
 
+    // Checks if all buildings in a layer are settled
     bool IsSettled()
     {
+        // iterate through the list.
         foreach(var building in buildings){
+            // if any of them are not settled,
             if(!building.IsSettled()){
+                // return false
                 return false;
             }
         }
+        // if you didn't return false, then they must all be settled
+        // so return true
         return true;
     }
 
+    // Adds a building to the list of buildings in a layer
     public void AddBuilding(GameObject building)
     {
         buildings.Add(building.GetComponent<Building>());
