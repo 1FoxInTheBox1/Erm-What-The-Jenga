@@ -22,34 +22,53 @@ public class TitlescreenHandler : MonoBehaviour
     GameObject[] allPrefabs = {};
     float counter = 0;
 
-    // Start is called before the first frame update
+    // Handlers for each button in the main menu
     void StartClicked() {
+        // Loads the main game scene
         SceneManager.LoadScene(1);
     }
     void SettingsClicked() {
+        // Toggles the settings panel
         settingsPanel.SetActive(!settingsPanel.activeSelf);
     }
     void QuitClicked() {
-        Debug.Log("Quit button clicked");
+        // Quits the game (only works in builds)
         Application.Quit();
     }
+    // Grabs a random prefab from the Resources/Buildings folder and spawns it
     void SpawnRandomBlock() {
+        // Get a random prefab
         GameObject randomPrefab = allPrefabs[Random.Range(0, allPrefabs.Length)];
+
+        // Get the x position and scale of the floor block
         var xPos = floorBlock.position.x;
         var halfSize = floorBlock.localScale.x / 2;
+
+        // Generate a random rotation
         var rot = Random.Range(0, 360);
+
+        // Spawn the block above the camera, with a random rotation and x position relative to the floor
         GameObject newBlock = Instantiate(randomPrefab, new Vector3(xPos + Random.Range(-halfSize, halfSize), 10, 0), Quaternion.Euler(new Vector3(0, 0, rot)));
-        var building = newBlock.GetComponent<Building>();
-        building.enabled = false;
-        newBlock.GetComponent<Collider2D>().isTrigger = false;
-        newBlock.transform.SetParent(fallingBlockContainer.transform);
+        
+        // Set the scale of the block to a random value between 0.5 and 1.5
         var scale = Random.Range(0.5f, 1.5f);
         newBlock.transform.localScale = new Vector3(scale, scale);
-        newBlock.tag = "TitleBlock";
+
+        // Disable the building script since we don't want the game logic to be running right now
+        var building = newBlock.GetComponent<Building>();
+        building.enabled = false;
+
+        // Disable the trigger property so that the block collides with the floor
+        newBlock.GetComponent<Collider2D>().isTrigger = false;
+        // Set the parent of the block to the falling block container
+        newBlock.transform.SetParent(fallingBlockContainer.transform);
     }
     void Start()
     {
+        // Store all prefabs from the Resources/Buildings folder
         allPrefabs = Resources.LoadAll<GameObject>("Buildings");
+
+        // Add listeners to each button
         startButton.onClick.AddListener(StartClicked);
         settingsButton.onClick.AddListener(SettingsClicked);
         quitButton.onClick.AddListener(QuitClicked);
@@ -58,12 +77,14 @@ public class TitlescreenHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Change the color of the title text and background color over time
         var newTitleColor = Color.HSVToRGB(Mathf.PingPong(Time.time * 0.5f, 1), 1, 1);
         titleText.color = newTitleColor;
 
-        var newBgColor = Color.HSVToRGB(Mathf.PingPong(Time.time * 0.1f, 1), 0.2f, 1);
+        var newBgColor = Color.HSVToRGB(Mathf.PingPong(Time.time * 0.1f, 1), 0.2f, 0.8f);
         mainCamera.backgroundColor = newBgColor;
 
+        // Spawn a new block every 2 seconds
         counter += Time.deltaTime;
         if (counter > 2) {
             counter -= 2;
