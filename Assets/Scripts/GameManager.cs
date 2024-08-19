@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
     }
 }
 
-class Layer
+public class Layer
 {
     List<Building> buildings;
 

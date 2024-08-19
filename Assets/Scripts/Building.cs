@@ -5,6 +5,7 @@ using UnityEngine;
 using ExtensionMethods;
 using System.IO;
 using UnityEngine.EventSystems;
+//using GameManager.Layer;
 
 public class Building : MonoBehaviour, IPointerDownHandler
 {
@@ -140,6 +141,9 @@ public class Building : MonoBehaviour, IPointerDownHandler
         return settleCounter >= 1;
     }
 
+    // TODO: WORK ON LOSE CONDITION
+    //public event Lose;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "BuildingKillTrigger") {
@@ -152,5 +156,10 @@ public class Building : MonoBehaviour, IPointerDownHandler
     private void OnTriggerExit2D(Collider2D other)
     {
         curCollisions--;
+    }
+
+    // Checks to make sure a block didnt fall off the layer.
+    public bool FellOff(Layer minHeight){
+        return true;
     }
 }
