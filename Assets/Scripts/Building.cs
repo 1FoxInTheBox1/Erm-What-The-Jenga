@@ -192,6 +192,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
     void checkCollisionEnter(Collider2D other) {
         
         switch (other.tag) {
+            case "Starting Plane":
             case "FloorPlane":
                 curCollisions++;
                 onFloor = true;
@@ -211,6 +212,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
 
     void checkCollisionExit(Collider2D other) {
         switch (other.tag) {
+            case "Starting Plane":
             case "FloorPlane":
                 curCollisions--;
                 onFloor = false;
