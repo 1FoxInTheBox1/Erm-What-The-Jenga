@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   points: 0
+  settleThreshold: 1
   isPlaced: 0
   selected: 0
   buildingSelect:

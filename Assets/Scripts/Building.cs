@@ -10,6 +10,7 @@ using UnityEngine.Events;
 public class Building : MonoBehaviour, IPointerDownHandler
 {
     public float points;
+    public float settleThreshold = 1;
     public bool isPlaced;
     public bool selected;
     private int curCollisions;
@@ -143,7 +144,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
         float angularspeed = Mathf.Abs(rb.angularVelocity);
         if (isPlaced) {
             // If the block hasnt moved enough over a certain period of time it is considered settled.
-            settleCounter = Mathf.Clamp(settleCounter + Time.deltaTime * ((linearspeed < 1 && angularspeed < 1) ? 1 : -1), 0, 1);
+            settleCounter = Mathf.Clamp(settleCounter + Time.deltaTime * ((linearspeed < settleThreshold && angularspeed < settleThreshold) ? 1 : -1), 0, 1);
         }
         // if its not settled, it'll be <1 and be considered false, otherwise it's true.
         return settleCounter >= 1;
