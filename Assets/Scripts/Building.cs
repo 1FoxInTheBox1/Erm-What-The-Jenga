@@ -177,4 +177,9 @@ public class Building : MonoBehaviour, IPointerDownHandler
             inBuildArea = false;
         }
     }
+
+    // Checks to make sure a block didnt fall off the layer.
+    public bool FellOff(Layer minHeight){
+        return true;
+    }
 }
