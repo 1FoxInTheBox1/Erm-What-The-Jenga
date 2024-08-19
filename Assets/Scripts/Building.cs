@@ -229,6 +229,10 @@ public class Building : MonoBehaviour, IPointerDownHandler
             case "BuildArea":
                 inBuildArea = true;
                 break;
+            case "Building":
+                if (other.GetComponent<Building>().isPlaced)
+                    curCollisions++;
+                break;
             default:
                 curCollisions++;
                 break;
@@ -244,6 +248,10 @@ public class Building : MonoBehaviour, IPointerDownHandler
                 break;
             case "BuildArea":
                 inBuildArea = false;
+                break;
+            case "Building":
+                if (other.GetComponent<Building>().isPlaced)
+                    curCollisions--;
                 break;
             default:
                 curCollisions--;
