@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     GameObject[] buildings;
     GameObject[] planes;
     public List<Layer> layers;
-    Layer currentLayer;
+    public Layer currentLayer;
     Camera cam;
     public uint TotalScore
     {
@@ -55,7 +55,6 @@ public class GameManager : MonoBehaviour
         if (currentLayer.IsSettled())
         {
             NewLayer();
-            CreateLayer();
         }
     }
 
@@ -71,8 +70,6 @@ public class GameManager : MonoBehaviour
     // Drops a new plane and creates a new layer
     void NewLayer()
     {
-        cam.transform.position = cam.transform.position + new Vector3(0, 2, 0);
-        Debug.Log("Moved camera");
 
         // TODO: the following commented out line is generating a big bug.
         // Instantiate(plane, new Vector3(0, 20, 0), Quaternion.identity);
@@ -82,13 +79,14 @@ public class GameManager : MonoBehaviour
         //Debug.Log("Created new plane");
         //currentLayer = CreateLayer(2, 6);
         //Debug.Log("Created new layer");
-        Vector3 spawnPosition = cam.transform.position + new Vector3(0,5,0);
-        Instantiate(planePrefab, cam.transform.position, Quaternion.identity);
 
-
+        // Create a new layer object, set it as the current layer
+        currentLayer = CreateLayer(2, 5);
         layers.Add(currentLayer);
-        currentLayer.DisplaySelectionBar();
-        currentLayer = layers[layers.Count - 1];
+
+        // The plane's spawn point is 10 units above the camera's center
+        Vector3 planeSpawnpoint = new Vector3(cam.transform.position.x, cam.transform.position.y + 10, 0);
+        Instantiate(planePrefab, planeSpawnpoint, Quaternion.identity);
     }
 
     // Creates a new layer.
@@ -210,9 +208,10 @@ public class Layer
     // TODO: Replace this with some sort of UI element
     public void DisplaySelectionBar()
     {
+        CameraFollow cam = Camera.main.GetComponent<CameraFollow>();
         for (int i = 0; i < buildings.Count; i++)
         {
-            buildings[i].transform.position = Camera.main.transform.position + new Vector3(-8, 2 - (1.5f * i), 10);
+            buildings[i].transform.position = cam.getSelectionBarCenter() + new Vector3(-8, 3 - (1.5f * i), 10);
         }
     }
 }
