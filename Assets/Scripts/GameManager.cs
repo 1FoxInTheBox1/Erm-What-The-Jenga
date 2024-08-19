@@ -10,9 +10,12 @@ using Vector3 = UnityEngine.Vector3;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject plane;
+
     GameObject[] buildings;
     List<Layer> layers;
     Layer currentLayer;
+    Camera cam;
     public uint TotalScore
     {
         get { return TotalScore; }
@@ -30,18 +33,23 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main;
         Physics2DRaycaster physicsRaycaster = FindObjectOfType<Physics2DRaycaster>();
         if (physicsRaycaster == null)
         {
-            Camera.main.gameObject.AddComponent<Physics2DRaycaster>();
+            cam.gameObject.AddComponent<Physics2DRaycaster>();
         }
+        layers = new List<Layer>();
         StartGame();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (currentLayer.IsSettled())
+        {
+            NewLayer();
+        }
     }
 
     // Starts a new game
@@ -49,6 +57,17 @@ public class GameManager : MonoBehaviour
     {
         buildings = Resources.LoadAll<GameObject>("Buildings");
         currentLayer = CreateLayer(2, 5);
+        layers.Add(currentLayer);
+        currentLayer.DisplaySelectionBar();
+    }
+
+    // Drops a new plane and creates a new layer
+    void NewLayer()
+    {
+        cam.transform.position = cam.transform.position + new Vector3(0, 5, 0);
+        Instantiate(plane, new Vector3(0, 20, 0), Quaternion.identity);
+        currentLayer = CreateLayer(2, 5);
+        layers.Add(currentLayer);
         currentLayer.DisplaySelectionBar();
     }
 
@@ -86,17 +105,8 @@ public class GameManager : MonoBehaviour
         return newLayer;
     }
 
-
-    // Returns true if all buildings on the current layer are settled
-    bool LayerFinished()
-    {
-        // if the latest layer's number of placed buildings is equal to the total number placed buldings, return true
-        Layer latestLayer = layers[layers.Count - 1];
-        uint latestLayerNumberOfBuildings = latestLayer.NumberOfBuildingsInLayer();
-        return latestLayer.PlacedBuildingsCount == latestLayerNumberOfBuildings;
-    }
-
-    // what is this?
+    // Disables physics for a layer
+    // TODO: remove this maybe? layer already has a DeactivatePhysics() method
     void DeactivateLayer()
     {
 
@@ -136,7 +146,7 @@ public class Layer
     }
 
     // Checks if all buildings in a layer are settled
-    bool IsSettled()
+    public bool IsSettled()
     {
         // iterate through the list.
         foreach(var building in buildings){
@@ -165,11 +175,13 @@ public class Layer
         }
     }
 
+    // Displays all the blocks to be placed in this layer at the bottom of the screen
+    // TODO: Replace this with some sort of UI element
     public void DisplaySelectionBar()
     {
         for (int i = 0; i < buildings.Count; i++)
         {
-            buildings[i].transform.position = new Vector3(-2 + i, -3, 0);
+            buildings[i].transform.position = Camera.main.transform.position + new Vector3(-8, 2 - (1.5f * i), 10);
         }
     }
 }

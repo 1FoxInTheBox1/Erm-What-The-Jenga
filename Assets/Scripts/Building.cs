@@ -5,7 +5,7 @@ using UnityEngine;
 using ExtensionMethods;
 using System.IO;
 using UnityEngine.EventSystems;
-//using GameManager.Layer;
+using UnityEngine.Events;
 
 public class Building : MonoBehaviour, IPointerDownHandler
 {
@@ -13,7 +13,12 @@ public class Building : MonoBehaviour, IPointerDownHandler
     public bool isPlaced;
     public bool selected;
     private int curCollisions;
+    private bool inBuildArea;
     private float settleCounter = 0;
+
+    public UnityEvent buildingSelect;
+    public UnityEvent buildingDeselect;
+    public UnityEvent buildingFall;
 
     public Rigidbody2D rb;
     private Collider2D col;
@@ -30,6 +35,8 @@ public class Building : MonoBehaviour, IPointerDownHandler
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
         rb.gravityScale = 0;
         selected = false;
+        buildingSelect.AddListener(GameObject.FindGameObjectWithTag("BuildArea").GetComponent<BuildArea>().Show);
+        buildingDeselect.AddListener(GameObject.FindGameObjectWithTag("BuildArea").GetComponent<BuildArea>().Hide);
     }
 
     // Update is called once per frame
@@ -40,14 +47,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
             if (!isPlaced)
             {
                 FollowMouse();
-                if (curCollisions > 0)
-                {
-                    sprite.color = Color.red;
-                }
-                else
-                {
-                    sprite.color = Color.white;
-                }
+                sprite.color = (IsValidPlacement()) ? Color.white : Color.red;
             }
 
             AdjustScale();
@@ -55,9 +55,10 @@ public class Building : MonoBehaviour, IPointerDownHandler
         {
             if (IsSettled() && isPlaced)
             {
-                Debug.Log("Rigidbody is settled");
+                //Debug.Log("Rigidbody is settled");
+                sprite.color = Color.blue;
                 DeactivatePhysics();
-            }
+            } 
         }
     }
 
@@ -69,7 +70,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
         {
             if (selected)
             {
-                if (curCollisions == 0)
+                if (IsValidPlacement())
                 {
                     b.Place();
                 }
@@ -77,6 +78,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
             {
                 rb.constraints = RigidbodyConstraints2D.FreezeRotation;
                 b.selected = true;
+                buildingSelect.Invoke();
             }
         }
     }
@@ -101,6 +103,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
         sprite.color = Color.white;
         col.isTrigger = false;
         selected = false;
+        buildingDeselect.Invoke();
     }
 
     void AdjustScale()
@@ -141,21 +144,38 @@ public class Building : MonoBehaviour, IPointerDownHandler
         return settleCounter >= 1;
     }
 
-    // TODO: WORK ON LOSE CONDITION
-    //public event Lose;
+    // Returns true if the building is currently in a position where it can be placed.
+    // This means that it is within the build area and is not overlapping any other objects
+    bool IsValidPlacement()
+    {
+        return curCollisions == 0 && inBuildArea;
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "BuildingKillTrigger") {
             Destroy(gameObject);
+            buildingFall.Invoke();
             return;
         }
-        curCollisions++;
+        if (other.tag != "BuildArea")
+        {
+            curCollisions++;
+        } else
+        {
+            inBuildArea = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        curCollisions--;
+        if (other.tag != "BuildArea")
+        {
+            curCollisions--;
+        } else
+        {
+            inBuildArea = false;
+        }
     }
 
     // Checks to make sure a block didnt fall off the layer.
