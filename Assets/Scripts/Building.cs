@@ -234,11 +234,11 @@ public class Building : MonoBehaviour, IPointerDownHandler
     {
         checkCollisionExit(other.collider);
     }
+    
     private void OnTriggerEnter2D(Collider2D other)
     {
         checkCollisionEnter(other);
     }
-
     private void OnTriggerExit2D(Collider2D other)
     {
         checkCollisionExit(other);
