@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
+using UnityEngine.SceneManagement;
 
 // TODO: Why am i getting:
 // "UnassignedReferenceException: The variable planePrefab of GameManager has not been assigned.
@@ -55,6 +56,7 @@ public class GameManager : MonoBehaviour
         {
             NewLayer();
         }
+        CheckGameOver();
     }
 
     // Starts a new game
@@ -63,6 +65,7 @@ public class GameManager : MonoBehaviour
         buildings = Resources.LoadAll<GameObject>("Buildings");
         currentLayer = CreateLayer(2, 5);
         layers.Add(currentLayer);
+        currentLayer.plane = GameObject.FindGameObjectWithTag("Starting Plane");
         currentLayer.DisplaySelectionBar();
     }
 
@@ -76,7 +79,7 @@ public class GameManager : MonoBehaviour
         // Spawn a new plane to fall on top of the stage
         // The plane's spawn point is 10 units above the camera's center
         Vector3 planeSpawnpoint = new Vector3(cam.transform.position.x, cam.transform.position.y + 10, 0);
-        Instantiate(planePrefab, planeSpawnpoint, Quaternion.identity);
+        currentLayer.plane = Instantiate(planePrefab, planeSpawnpoint, Quaternion.identity);
     }
 
     // Creates a new layer.
@@ -130,11 +133,37 @@ public class GameManager : MonoBehaviour
     {
 
     }
+    
+    void CheckGameOver()
+    {
+        // Check if there are more than three layers
+        if (layers.Count > 3)
+        {
+            // Loop through the subset of layers
+            for (int i = layers.Count - 3; i < layers.Count - 1; i++)
+            {
+                // Access each layer in the subset
+                var layer = layers[i];
+                if(layer.DidABuildingFallOff(layer.plane)){
+                    // Does this go back to title screen?
+                    SceneManager.LoadScene(0);
+                }
+            }
+        }
+        else{
+            foreach(var layer in layers){
+                if(layer.DidABuildingFallOff(layer.plane)){
+                    SceneManager.LoadScene(0);
+                }
+            }
+        }
+    }
 }
 
 public class Layer
 {
     List<Building> buildings;
+    public GameObject plane;
 
     public uint NumberOfBuildingsInLayer()
     {
@@ -203,6 +232,16 @@ public class Layer
         {
             buildings[i].transform.position = cam.getSelectionBarCenter() + new Vector3(-8, 3 - (1.5f * i), 10);
         }
+    }
+
+    public bool DidABuildingFallOff(GameObject plane){
+        foreach(var building in buildings){
+            if(building.FellOff(plane.transform.position)){
+                // kcik player back to title screen
+                return true;
+            }
+        }
+        return false;
     }
 }
 
