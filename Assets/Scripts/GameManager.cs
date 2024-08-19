@@ -133,6 +133,17 @@ public class GameManager : MonoBehaviour
     {
 
     }
+
+    private bool DidAPlaneFallOff(){
+        if(layers.Count <= 1) return false;
+
+        for(int i = 1; i < layers.Count-1; i++){
+            if(layers[i].plane.transform.position.y < layers[i-1].plane.transform.position.y){
+                return true;
+            }
+        }
+        return false;
+    }
     
     void CheckGameOver()
     {
@@ -156,6 +167,14 @@ public class GameManager : MonoBehaviour
                     SceneManager.LoadScene(0);
                 }
             }
+        }
+        foreach(var layer in layers){
+            if(layer.IsABuildingBelowTheStartingPlane()){
+                SceneManager.LoadScene(0);
+            }
+        }
+        if(DidAPlaneFallOff()){
+            SceneManager.LoadScene(0);
         }
     }
 }
@@ -232,6 +251,16 @@ public class Layer
         {
             buildings[i].transform.position = cam.getSelectionBarCenter() + new Vector3(-8, 3 - (1.5f * i), 10);
         }
+    }
+
+    // Checks if a building is below the starting plane
+    public bool IsABuildingBelowTheStartingPlane(){
+        foreach(var building in buildings){
+            if(building.transform.position.y < -10 && building.isPlaced){
+                return true;
+            }
+        }
+        return false;
     }
 
     public bool DidABuildingFallOff(GameObject plane){
