@@ -8,12 +8,17 @@ using UnityEngine.EventSystems;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
+// TODO: Why am i getting:
+// "UnassignedReferenceException: The variable planePrefab of GameManager has not been assigned.
+// You probably need to assign the planePrefab variable of the GameManager script in the inspector."
+
 public class GameManager : MonoBehaviour
 {
-    public GameObject plane;
+    public GameObject planePrefab;
 
     GameObject[] buildings;
-    List<Layer> layers;
+    GameObject[] planes;
+    public List<Layer> layers;
     public Layer currentLayer;
     Camera cam;
     public uint TotalScore
@@ -44,6 +49,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Update is called once per frame
+    // TODO: Fix this function
     void Update()
     {
         if (currentLayer.IsSettled())
@@ -64,12 +70,23 @@ public class GameManager : MonoBehaviour
     // Drops a new plane and creates a new layer
     void NewLayer()
     {
-        // The plane's spawn point is 10 units above the camera's center
-        Vector3 planeSpawnpoint = new Vector3(cam.transform.position.x, cam.transform.position.y + 10, 0);
-        Instantiate(plane, planeSpawnpoint, Quaternion.identity);
-        // Create a new layer object, set it as the current layer, and display its selection bar
+
+        // TODO: the following commented out line is generating a big bug.
+        // Instantiate(plane, new Vector3(0, 20, 0), Quaternion.identity);
+
+        //Vector3 spawnPosition = cam.transform.position + new Vector3(0, 15, 0);
+        //GameObject planeInstance = Instantiate(plane, spawnPosition, Quaternion.identity);
+        //Debug.Log("Created new plane");
+        //currentLayer = CreateLayer(2, 6);
+        //Debug.Log("Created new layer");
+
+        // Create a new layer object, set it as the current layer
         currentLayer = CreateLayer(2, 5);
         layers.Add(currentLayer);
+
+        // The plane's spawn point is 10 units above the camera's center
+        Vector3 planeSpawnpoint = new Vector3(cam.transform.position.x, cam.transform.position.y + 10, 0);
+        Instantiate(planePrefab, planeSpawnpoint, Quaternion.identity);
     }
 
     // Creates a new layer.
@@ -80,29 +97,40 @@ public class GameManager : MonoBehaviour
     // such as [a, a, b, b, b] or [c, b, b, b, b]
     Layer CreateLayer(int numTypes, int totalBuildings)
     {
+        // make a hashmap that holds how many of each building there are
         Dictionary<GameObject, int> buildingQuantities = new Dictionary<GameObject, int>();
+        // make a list of all the possible buildings
         List<GameObject> possibleBuildings = new List<GameObject>(buildings);
+        // the buildings that
         int remainingBuildings = totalBuildings;
         for (int i = numTypes; i > 0; i--)
         {
             int buildingIndex = Random.Range(0, possibleBuildings.Count);
             GameObject building = possibleBuildings[buildingIndex];
             buildingQuantities[building] = 0;
+            // if theres only one kind of building left, make it the rest of all the buildings
+            // otherwise, make a random amount of a type of buildings
             int amount = (i == 1) ? remainingBuildings : Random.Range(1, remainingBuildings + 1);
+            // make the quantity of a given buildings equal to the pseudorandom amount
             buildingQuantities[building] = amount;
+            // update the amount of remaining buildings
             remainingBuildings -= amount;
+            // now that we used that building, remove it from the possibly chosen buildings list.
             possibleBuildings.RemoveAt(buildingIndex);
         }
 
         Layer newLayer = new Layer();
         foreach (GameObject building in buildingQuantities.Keys)
         {
+            // for each buildings, iterate through the given quantity we previously generated
             for (int i = 0; i < buildingQuantities[building]; i++)
             {
+                // and place it down on the scene.
                 GameObject newBuilding = Instantiate(building, new Vector3(200, 0, 0), Quaternion.identity);
                 newLayer.AddBuilding(newBuilding);
             }
         }
+        // return the new layer
         return newLayer;
     }
 
