@@ -243,7 +243,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
     }
 
     // Checks to make sure a block didnt fall off the layer.
-    public bool FellOff(Layer minHeight){
-        return true;
+    public bool FellOff(Vector2 planeVector2){
+        return isPlaced && this.transform.position.y < planeVector2.y-2;
     }
 }
