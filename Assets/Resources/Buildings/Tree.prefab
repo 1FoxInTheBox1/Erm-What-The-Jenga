@@ -11,10 +11,8 @@ GameObject:
   - component: {fileID: 767434232695106612}
   - component: {fileID: 6829163827726001299}
   - component: {fileID: 1827288636555755462}
-  - component: {fileID: 768338241699096821}
-  - component: {fileID: 2081841325873204914}
-  - component: {fileID: 2626883391792808445}
   - component: {fileID: 6272267471262029125}
+  - component: {fileID: 2081841325873204914}
   m_Layer: 0
   m_Name: Tree
   m_TagString: Untagged
@@ -116,134 +114,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!66 &768338241699096821
-CompositeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8448444876868944131}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
-  m_GenerationType: 0
-  m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 2626883391792808445}
-    m_ColliderPaths:
-    - - X: 1008468
-        Y: -4615577
-      - X: -1405099
-        Y: -4615577
-      - X: -1405099
-        Y: -12749999
-      - X: 1008468
-        Y: -12749999
-  m_CompositePaths:
-    m_Paths:
-    - - {x: 0.1008175, y: -1.2749999}
-      - {x: 0.1008175, y: -0.46155772}
-      - {x: -0.1405099, y: -0.461587}
-      - {x: -0.14048061, y: -1.2749999}
-  m_VertexDistance: 0.0005
-  m_OffsetDistance: 0.00005
-  m_UseDelaunayMesh: 0
-  m_CompositeGameObject: {fileID: 8448444876868944131}
---- !u!114 &2081841325873204914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8448444876868944131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6f6bb2bbcae9cf45ba76b94317d5fc7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  points: 0
-  settleThreshold: 1
-  isPlaced: 0
-  selected: 0
-  buildingSelect:
-    m_PersistentCalls:
-      m_Calls: []
-  buildingDeselect:
-    m_PersistentCalls:
-      m_Calls: []
-  buildingFall:
-    m_PersistentCalls:
-      m_Calls: []
-  rb: {fileID: 0}
---- !u!61 &2626883391792808445
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8448444876868944131}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 1
-  m_Offset: {x: -0.019831538, y: -0.8682788}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.73, y: 2.55}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.24135685, y: 0.8134421}
-  m_EdgeRadius: 0
 --- !u!60 &6272267471262029125
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -275,7 +145,7 @@ PolygonCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_UsedByComposite: 1
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -320,3 +190,29 @@ PolygonCollider2D:
       - {x: 0.15264753, y: -0.4323538}
       - {x: 0.26824477, y: -0.4079793}
   m_UseDelaunayMesh: 0
+--- !u!114 &2081841325873204914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8448444876868944131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6f6bb2bbcae9cf45ba76b94317d5fc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  points: 0
+  settleThreshold: 1
+  isPlaced: 0
+  selected: 0
+  buildingSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  buildingDeselect:
+    m_PersistentCalls:
+      m_Calls: []
+  buildingFall:
+    m_PersistentCalls:
+      m_Calls: []
+  rb: {fileID: 0}
