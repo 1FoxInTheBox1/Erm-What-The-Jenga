@@ -79,7 +79,9 @@ public class GameManager : MonoBehaviour
     // such as [a, a, b, b, b] or [c, b, b, b, b]
     Layer CreateLayer(int numTypes, int totalBuildings)
     {
+        // make a hashmap that holds how many of each building there are
         Dictionary<GameObject, int> buildingQuantities = new Dictionary<GameObject, int>();
+        // 
         List<GameObject> possibleBuildings = new List<GameObject>(buildings);
         int remainingBuildings = totalBuildings;
         for (int i = numTypes; i > 0; i--)
