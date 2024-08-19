@@ -14,7 +14,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
     private int curCollisions;
     private float settleCounter = 0;
 
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     private Collider2D col;
     private Camera cam;
     private SpriteRenderer sprite;
@@ -93,8 +93,11 @@ public class Building : MonoBehaviour, IPointerDownHandler
     public void Place()
     {
         isPlaced = true;
+        // give it no constraints, allowing it to move silly style
         rb.constraints = RigidbodyConstraints2D.None;
+        // turn on gravity
         rb.gravityScale = 1;
+        // set the color to white
         sprite.color = Color.white;
         col.isTrigger = false;
         selected = false;
@@ -120,7 +123,8 @@ public class Building : MonoBehaviour, IPointerDownHandler
     void DeactivatePhysics()
     {
         if (IsSettled()){
-            rb.gravityScale=0;
+            sprite.color = Color.blue;
+            //rb.constraints = RigidbodyConstraints2D.FreezeAll;
         }
     }
 
@@ -130,8 +134,10 @@ public class Building : MonoBehaviour, IPointerDownHandler
         float linearspeed = rb.velocity.magnitude;
         float angularspeed = Mathf.Abs(rb.angularVelocity);
         if (isPlaced) {
+            // If the block hasnt moved enough over a certain period of time it is considered settled.
             settleCounter = Mathf.Clamp(settleCounter + Time.deltaTime * ((linearspeed < 1 && angularspeed < 1) ? 1 : -1), 0, 1);
         }
+        // if its not settled, it'll be <1 and be considered false, otherwise it's true.
         return settleCounter >= 1;
     }
 

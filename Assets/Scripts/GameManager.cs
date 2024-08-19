@@ -136,17 +136,23 @@ class Layer
         PlacedBuildingsCount = 0;
     }
 
-    // Returns true if all blokcs in this layer are settled
-    public bool IsSettled()
+    // Checks if all buildings in a layer are settled
+    bool IsSettled()
     {
-        bool result = true;
-        foreach (Building b in buildings)
-        {
-            result = result && b.IsSettled();
+        // iterate through the list.
+        foreach(var building in buildings){
+            // if any of them are not settled,
+            if(!building.IsSettled()){
+                // return false
+                return false;
+            }
         }
-        return result;
+        // if you didn't return false, then they must all be settled
+        // so return true
+        return true;
     }
 
+    // Adds a building to the list of buildings in a layer
     public void AddBuilding(GameObject building)
     {
         buildings.Add(building.GetComponent<Building>());
@@ -155,7 +161,9 @@ class Layer
     // Disables physics for this layer
     void DeactivatePhysics()
     {
-
+        if(IsSettled() && buildings.Count > 3){
+            buildings[buildings.Count-3].rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        }
     }
 
     // Displays all the blocks to be placed in this layer at the bottom of the screen
