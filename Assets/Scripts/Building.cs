@@ -6,6 +6,10 @@ using ExtensionMethods;
 using System.IO;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using Unity.VisualScripting;
+using Unity.Mathematics;
+using UnityEngine.UIElements;
+using System.Buffers.Text;
 
 public class Building : MonoBehaviour, IPointerDownHandler
 {
@@ -14,7 +18,8 @@ public class Building : MonoBehaviour, IPointerDownHandler
     public bool isPlaced;
     public bool selected;
     private int curCollisions;
-    private bool inBuildArea;
+    private bool inBuildArea = false;
+    private bool onFloor = false;
     private float settleCounter = 0;
 
     public UnityEvent buildingSelect;
@@ -59,6 +64,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
             AdjustScale();
         } else
         {
+            ApplyDrag();
             if (IsSettled() && isPlaced)
             {
                 //Debug.Log("Rigidbody is settled");
@@ -67,25 +73,36 @@ public class Building : MonoBehaviour, IPointerDownHandler
         }
     }
 
+    private uint[] angleThreshold = {85, 95};
+    void ApplyDrag()
+    {
+        if (!onFloor)
+            return;
+        //Debug.Log("Applying drag");
+        var angle = Vector2.Angle(rb.velocity, Vector2.up);
+        if (angle < angleThreshold[0] || angle > angleThreshold[1])
+            return;
+        var counterVel = -(rb.velocity * 0.2f);
+        // We want the ball to not only slow down, but be capable of stopping on a sloped surface.
+        // That means we can't just use a linear drag, we need to use a counter velocity.
+        rb.velocity += counterVel * (Time.deltaTime * 60);
+    }
+
     // This is used to determine when a building has been clicked and to to perform the right actions when that happens
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (isPlaced)
+            return;
         Building b = eventData.pointerCurrentRaycast.gameObject.GetComponent<Building>();
-        if (!isPlaced)
+        if (!selected)
         {
-            if (selected)
-            {
-                if (IsValidPlacement())
-                {
-                    b.Place();
-                }
-            } else
-            {
-                rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-                b.selected = true;
-                buildingSelect.Invoke();
-            }
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            b.selected = true;
+            buildingSelect.Invoke();
+            return;
         }
+        if (IsValidPlacement())
+            b.Place();
     }
 
     // Moves the building to the mouse position
@@ -116,6 +133,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
         float scaleInput = Input.GetAxis("Mouse ScrollWheel");
         var newVector = transform.localScale + new Vector3(scaleInput, scaleInput, scaleInput);
         newVector.Clamp(1, 10);
+        rb.mass = newVector.magnitude;
         // if its already too big or too small, then dont make it bigger or smaller.
         transform.localScale = newVector;
     }
@@ -171,31 +189,57 @@ public class Building : MonoBehaviour, IPointerDownHandler
         }
     }
 
+    void checkCollisionEnter(Collider2D other) {
+        
+        switch (other.tag) {
+            case "FloorPlane":
+                curCollisions++;
+                onFloor = true;
+                break;
+            case "BuildingKillTrigger":
+                Destroy(gameObject);
+                buildingFall.Invoke();
+                break;
+            case "BuildArea":
+                inBuildArea = true;
+                break;
+            default:
+                curCollisions++;
+                break;
+        }
+    }
+
+    void checkCollisionExit(Collider2D other) {
+        switch (other.tag) {
+            case "FloorPlane":
+                curCollisions--;
+                onFloor = false;
+                break;
+            case "BuildArea":
+                inBuildArea = false;
+                break;
+            default:
+                curCollisions--;
+                break;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        checkCollisionEnter(other.collider);
+    }
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        checkCollisionExit(other.collider);
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "BuildingKillTrigger") {
-            Destroy(gameObject);
-            buildingFall.Invoke();
-            return;
-        }
-        if (other.tag != "BuildArea")
-        {
-            curCollisions++;
-        } else
-        {
-            inBuildArea = true;
-        }
+        checkCollisionEnter(other);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag != "BuildArea")
-        {
-            curCollisions--;
-        } else
-        {
-            inBuildArea = false;
-        }
+        checkCollisionExit(other);
     }
 
     // Checks to make sure a block didnt fall off the layer.

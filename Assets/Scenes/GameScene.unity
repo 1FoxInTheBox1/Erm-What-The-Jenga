@@ -398,8 +398,8 @@ GameObject:
   - component: {fileID: 1342248154}
   - component: {fileID: 1342248153}
   m_Layer: 0
-  m_Name: Square (1)
-  m_TagString: Untagged
+  m_Name: Floor
+  m_TagString: FloorPlane
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -885,8 +885,8 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1489107194}
   - {fileID: 519420032}
   - {fileID: 1342248156}
-  - {fileID: 1489107194}
   - {fileID: 1498870118}
   - {fileID: 2022561499}
