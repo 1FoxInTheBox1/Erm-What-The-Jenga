@@ -35,8 +35,13 @@ public class Building : MonoBehaviour, IPointerDownHandler
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
         rb.gravityScale = 0;
         selected = false;
-        buildingSelect.AddListener(GameObject.FindGameObjectWithTag("BuildArea").GetComponent<BuildArea>().Show);
-        buildingDeselect.AddListener(GameObject.FindGameObjectWithTag("BuildArea").GetComponent<BuildArea>().Hide);
+        GameObject buildAreaObject = GameObject.FindGameObjectWithTag("BuildArea");
+        if (buildAreaObject != null)
+        {
+            BuildArea buildArea = buildAreaObject.GetComponent<BuildArea>();
+            buildingSelect.AddListener(buildArea.Show);
+            buildingDeselect.AddListener(buildArea.Hide);
+        }
     }
 
     // Update is called once per frame

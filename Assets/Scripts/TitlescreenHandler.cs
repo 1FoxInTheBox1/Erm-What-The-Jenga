@@ -60,6 +60,11 @@ public class TitlescreenHandler : MonoBehaviour
 
         // Disable the trigger property so that the block collides with the floor
         newBlock.GetComponent<Collider2D>().isTrigger = false;
+        // Remove constraints on the block's motion
+        Rigidbody2D rb = newBlock.GetComponent<Rigidbody2D>();
+        rb.constraints = RigidbodyConstraints2D.None;
+        // Enable gravity on block
+        rb.gravityScale = 1;
         // Set the parent of the block to the falling block container
         newBlock.transform.SetParent(fallingBlockContainer.transform);
     }
