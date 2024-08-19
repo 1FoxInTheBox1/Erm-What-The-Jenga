@@ -26,7 +26,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
     private SpriteRenderer sprite;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         cam = Camera.main;
         rb = GetComponent<Rigidbody2D>();
