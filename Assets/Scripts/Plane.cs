@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class Plane : MonoBehaviour
 {
-
+    public float camOffset = 1;
     private bool firstContact;
 
     private void Start()
@@ -18,7 +18,7 @@ public class Plane : MonoBehaviour
         if (firstContact)
         {
             Camera cam = Camera.main;
-            cam.GetComponent<CameraFollow>().setTarget(transform.position);
+            cam.GetComponent<CameraFollow>().setTarget(transform.position + new Vector3(0, camOffset, 0));
             GameManager gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
             gm.currentLayer.DisplaySelectionBar();
             firstContact = false;
