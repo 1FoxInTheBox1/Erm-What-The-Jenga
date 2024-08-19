@@ -6,6 +6,7 @@ TagManager:
   tags:
   - TitleBlock
   - BuildingKillTrigger
+  - BuildArea
   layers:
   - Default
   - TransparentFX
