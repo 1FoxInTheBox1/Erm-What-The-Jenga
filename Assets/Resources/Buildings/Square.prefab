@@ -173,3 +173,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   points: 0
   isPlaced: 0
+  selected: 0
+  buildingSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  buildingDeselect:
+    m_PersistentCalls:
+      m_Calls: []
+  buildingFall:
+    m_PersistentCalls:
+      m_Calls: []
+  rb: {fileID: 0}
