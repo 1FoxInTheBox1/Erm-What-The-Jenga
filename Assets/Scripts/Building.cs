@@ -10,6 +10,7 @@ using UnityEngine.Events;
 public class Building : MonoBehaviour, IPointerDownHandler
 {
     public float points;
+    public float settleThreshold = 1;
     public bool isPlaced;
     public bool selected;
     private int curCollisions;
@@ -47,12 +48,12 @@ public class Building : MonoBehaviour, IPointerDownHandler
     // Update is called once per frame
     void Update()
     {
+        setSpriteColor();
         if (selected)
         {
             if (!isPlaced)
             {
                 FollowMouse();
-                sprite.color = (IsValidPlacement()) ? Color.white : Color.red;
             }
 
             AdjustScale();
@@ -61,7 +62,6 @@ public class Building : MonoBehaviour, IPointerDownHandler
             if (IsSettled() && isPlaced)
             {
                 //Debug.Log("Rigidbody is settled");
-                sprite.color = Color.blue;
                 DeactivatePhysics();
             } 
         }
@@ -143,10 +143,10 @@ public class Building : MonoBehaviour, IPointerDownHandler
         float angularspeed = Mathf.Abs(rb.angularVelocity);
         if (isPlaced) {
             // If the block hasnt moved enough over a certain period of time it is considered settled.
-            settleCounter = Mathf.Clamp(settleCounter + Time.deltaTime * ((linearspeed < 1 && angularspeed < 1) ? 1 : -1), 0, 1);
+            settleCounter = Mathf.Clamp(settleCounter + Time.deltaTime * ((linearspeed < settleThreshold && angularspeed < settleThreshold) ? 1 : -1), 0, 1);
         }
         // if its not settled, it'll be <1 and be considered false, otherwise it's true.
-        return settleCounter >= 1;
+        return settleCounter >= 1 && isPlaced;
     }
 
     // Returns true if the building is currently in a position where it can be placed.
@@ -154,6 +154,21 @@ public class Building : MonoBehaviour, IPointerDownHandler
     bool IsValidPlacement()
     {
         return curCollisions == 0 && inBuildArea;
+    }
+
+    // Tints the sprite a certain color depending on if it can be placed, has settled, etc.
+    void setSpriteColor ()
+    {
+        if (IsSettled())
+        {
+            sprite.color = Color.blue;
+        } else if (selected && !IsValidPlacement())
+        {
+            sprite.color = Color.red;
+        } else
+        {
+            sprite.color = Color.white;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
