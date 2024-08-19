@@ -22,12 +22,15 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // This is meant to be a simple linear interpolation
+        // Might be a better way of doing it but this seems to work just fine
         Vector3 path = target - prevTarget;
         float progress = Mathf.Clamp(t / followTime, 0, 1);
         transform.position = prevTarget + (path * progress);
         t += Time.deltaTime;
     }
 
+    // Sets the position the camera should pan over to
     public void setTarget(Vector3 newTarget)
     {
         prevTarget = target;
@@ -35,6 +38,8 @@ public class CameraFollow : MonoBehaviour
         t = 0;
     }
 
+    // This is just used to display the new layer's selection bar in the correct position
+    // We need it to be to the left of where the camera is going to be, so we return the target position
     public Vector3 getSelectionBarCenter()
     {
         return target;

@@ -49,7 +49,6 @@ public class GameManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    // TODO: Fix this function
     void Update()
     {
         if (currentLayer.IsSettled())
@@ -70,6 +69,11 @@ public class GameManager : MonoBehaviour
     // Drops a new plane and creates a new layer
     void NewLayer()
     {
+        
+        /*
+         *  I don't need the bugged code below, and it seems like the game is working fine without it
+         *  If we don't need it then I vote we delete it - Nathan
+         */
 
         // TODO: the following commented out line is generating a big bug.
         // Instantiate(plane, new Vector3(0, 20, 0), Quaternion.identity);
@@ -84,6 +88,7 @@ public class GameManager : MonoBehaviour
         currentLayer = CreateLayer(2, 5);
         layers.Add(currentLayer);
 
+        // Spawn a new plane to fall on top of the stage
         // The plane's spawn point is 10 units above the camera's center
         Vector3 planeSpawnpoint = new Vector3(cam.transform.position.x, cam.transform.position.y + 10, 0);
         Instantiate(planePrefab, planeSpawnpoint, Quaternion.identity);
