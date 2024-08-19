@@ -22,6 +22,11 @@ public class Building : MonoBehaviour, IPointerDownHandler
     private bool onFloor = false;
     private float settleCounter = 0;
 
+    public AudioClip resizeSound;
+    public AudioClip placeSound;
+    public AudioClip selectSound;
+    public AudioClip invalidPlaceSound;
+
     public UnityEvent buildingSelect;
     public UnityEvent buildingDeselect;
     public UnityEvent buildingFall;
@@ -30,6 +35,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
     private Collider2D col;
     private Camera cam;
     private SpriteRenderer sprite;
+    private AudioSource audioSource;
 
     // Start is called before the first frame update
     void Awake()
@@ -38,6 +44,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         sprite = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
         rb.gravityScale = 0;
         selected = false;
@@ -98,11 +105,20 @@ public class Building : MonoBehaviour, IPointerDownHandler
         {
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             b.selected = true;
+            audioSource.clip = selectSound;
+            audioSource.Play();
             buildingSelect.Invoke();
             return;
         }
         if (IsValidPlacement())
+        {
             b.Place();
+        }
+        else
+        {
+            audioSource.clip = invalidPlaceSound;
+            audioSource.Play();
+        }
     }
 
     // Moves the building to the mouse position
@@ -126,16 +142,25 @@ public class Building : MonoBehaviour, IPointerDownHandler
         col.isTrigger = false;
         selected = false;
         buildingDeselect.Invoke();
+        // play sfx
+        audioSource.clip = placeSound;
+        audioSource.Play();
     }
 
     void AdjustScale()
     {
         float scaleInput = Input.GetAxis("Mouse ScrollWheel");
-        var newVector = transform.localScale + new Vector3(scaleInput, scaleInput, scaleInput);
-        newVector.Clamp(1, 10);
-        rb.mass = newVector.magnitude;
-        // if its already too big or too small, then dont make it bigger or smaller.
-        transform.localScale = newVector;
+        if (scaleInput != 0)
+        {
+            var newVector = transform.localScale + new Vector3(scaleInput, scaleInput, scaleInput);
+            newVector.Clamp(1, 10);
+            rb.mass = newVector.magnitude;
+            // if its already too big or too small, then dont make it bigger or smaller.
+            transform.localScale = newVector;
+            // play sfx
+            audioSource.clip = resizeSound;
+            audioSource.Play();
+        }
     }
 
     // Each building needs its own way to get points
