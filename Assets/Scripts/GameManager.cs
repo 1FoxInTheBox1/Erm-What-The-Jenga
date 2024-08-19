@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     GameObject[] buildings;
     List<Layer> layers;
-    Layer currentLayer;
+    public Layer currentLayer;
     Camera cam;
     public uint TotalScore
     {
@@ -64,11 +64,12 @@ public class GameManager : MonoBehaviour
     // Drops a new plane and creates a new layer
     void NewLayer()
     {
-        cam.transform.position = cam.transform.position + new Vector3(0, 5, 0);
-        Instantiate(plane, new Vector3(0, 20, 0), Quaternion.identity);
+        // The plane's spawn point is 10 units above the camera's center
+        Vector3 planeSpawnpoint = new Vector3(cam.transform.position.x, cam.transform.position.y + 10, 0);
+        Instantiate(plane, planeSpawnpoint, Quaternion.identity);
+        // Create a new layer object, set it as the current layer, and display its selection bar
         currentLayer = CreateLayer(2, 5);
         layers.Add(currentLayer);
-        currentLayer.DisplaySelectionBar();
     }
 
     // Creates a new layer.
@@ -179,9 +180,10 @@ public class Layer
     // TODO: Replace this with some sort of UI element
     public void DisplaySelectionBar()
     {
+        CameraFollow cam = Camera.main.GetComponent<CameraFollow>();
         for (int i = 0; i < buildings.Count; i++)
         {
-            buildings[i].transform.position = Camera.main.transform.position + new Vector3(-8, 2 - (1.5f * i), 10);
+            buildings[i].transform.position = cam.getSelectionBarCenter() + new Vector3(-8, 3 - (1.5f * i), 10);
         }
     }
 }
