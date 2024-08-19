@@ -69,21 +69,6 @@ public class GameManager : MonoBehaviour
     // Drops a new plane and creates a new layer
     void NewLayer()
     {
-        
-        /*
-         *  I don't need the bugged code below, and it seems like the game is working fine without it
-         *  If we don't need it then I vote we delete it - Nathan
-         */
-
-        // TODO: the following commented out line is generating a big bug.
-        // Instantiate(plane, new Vector3(0, 20, 0), Quaternion.identity);
-
-        //Vector3 spawnPosition = cam.transform.position + new Vector3(0, 15, 0);
-        //GameObject planeInstance = Instantiate(plane, spawnPosition, Quaternion.identity);
-        //Debug.Log("Created new plane");
-        //currentLayer = CreateLayer(2, 6);
-        //Debug.Log("Created new layer");
-
         // Create a new layer object, set it as the current layer
         currentLayer = CreateLayer(2, 5);
         layers.Add(currentLayer);
