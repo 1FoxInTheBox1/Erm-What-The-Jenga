@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     GameObject[] buildings;
     List<Layer> layers;
     Layer currentLayer;
+    Camera cam;
     public uint TotalScore
     {
         get { return TotalScore; }
@@ -32,10 +33,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main;
         Physics2DRaycaster physicsRaycaster = FindObjectOfType<Physics2DRaycaster>();
         if (physicsRaycaster == null)
         {
-            Camera.main.gameObject.AddComponent<Physics2DRaycaster>();
+            cam.gameObject.AddComponent<Physics2DRaycaster>();
         }
         layers = new List<Layer>();
         StartGame();
@@ -46,10 +48,7 @@ public class GameManager : MonoBehaviour
     {
         if (currentLayer.IsSettled())
         {
-            Instantiate(plane, new Vector3(0, 20, 0), Quaternion.identity);
-            currentLayer = CreateLayer(2, 5);
-            layers.Add(currentLayer);
-            currentLayer.DisplaySelectionBar();
+            NewLayer();
         }
     }
 
@@ -57,6 +56,16 @@ public class GameManager : MonoBehaviour
     void StartGame()
     {
         buildings = Resources.LoadAll<GameObject>("Buildings");
+        currentLayer = CreateLayer(2, 5);
+        layers.Add(currentLayer);
+        currentLayer.DisplaySelectionBar();
+    }
+
+    // Drops a new plane and creates a new layer
+    void NewLayer()
+    {
+        cam.transform.position = cam.transform.position + new Vector3(0, 5, 0);
+        Instantiate(plane, new Vector3(0, 20, 0), Quaternion.identity);
         currentLayer = CreateLayer(2, 5);
         layers.Add(currentLayer);
         currentLayer.DisplaySelectionBar();
@@ -137,7 +146,7 @@ class Layer
     }
 
     // Checks if all buildings in a layer are settled
-    bool IsSettled()
+    public bool IsSettled()
     {
         // iterate through the list.
         foreach(var building in buildings){
@@ -172,7 +181,7 @@ class Layer
     {
         for (int i = 0; i < buildings.Count; i++)
         {
-            buildings[i].transform.position = new Vector3(-2 + i, -3, 0);
+            buildings[i].transform.position = Camera.main.transform.position + new Vector3(-8, 2 - (1.5f * i), 10);
         }
     }
 }
