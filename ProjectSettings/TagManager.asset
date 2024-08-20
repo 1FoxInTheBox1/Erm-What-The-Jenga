@@ -9,6 +9,7 @@ TagManager:
   - GameManager
   - FloorPlane
   - Starting Plane
+  - Building
   layers:
   - Default
   - TransparentFX
