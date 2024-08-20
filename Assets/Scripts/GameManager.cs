@@ -10,6 +10,8 @@ using Vector3 = UnityEngine.Vector3;
 using UnityEngine.SceneManagement;
 using TMPro;
 
+// thank you for playing my game! (mario reference)
+
 public class GameManager : MonoBehaviour
 {
     public GameObject planePrefab;
