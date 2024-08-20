@@ -8,6 +8,8 @@ public class CameraFollow : MonoBehaviour
     Camera cam;
     Vector3 target;
     float targetSize = 5;
+    [SerializeField]
+    float maxSize = 10;
     bool followingGameOver;
     // Follow time is the time in seconds it will take for the camera to pan to its target position
     public float followTime = 1f;
@@ -26,7 +28,7 @@ public class CameraFollow : MonoBehaviour
         float delta = Mathf.Clamp(6 * Time.deltaTime, 0, 1);
         transform.position = Vector3.Lerp(transform.position, target, delta);
         cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetSize, delta);
-        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, 5, 10);
+        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, 5, maxSize);
     }
 
     // Sets the position the camera should pan over to
