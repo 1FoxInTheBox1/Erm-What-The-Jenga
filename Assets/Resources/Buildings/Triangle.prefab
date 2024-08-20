@@ -140,6 +140,8 @@ MonoBehaviour:
   buildingFall:
     m_PersistentCalls:
       m_Calls: []
+  settleColor: {r: 0.6313726, g: 0.93333334, b: 1, a: 1}
+  invalidColor: {r: 1, g: 0, b: 0, a: 1}
   rb: {fileID: 6415520079675673200}
   sprite: {fileID: 7294360786098903435}
 --- !u!82 &303975842843690809

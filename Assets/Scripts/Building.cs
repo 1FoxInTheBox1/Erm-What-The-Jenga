@@ -31,6 +31,9 @@ public class Building : MonoBehaviour, IPointerDownHandler
     public UnityEvent buildingDeselect;
     public UnityEvent buildingFall;
 
+    public Color settleColor;
+    public Color invalidColor;
+
     public Rigidbody2D rb;
     private Collider2D col;
     private Camera cam;
@@ -174,7 +177,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
     void DeactivatePhysics()
     {
         if (IsSettled()){
-            sprite.color = Color.blue;
+            //sprite.color = Color.blue;
             //rb.constraints = RigidbodyConstraints2D.FreezeAll;
         }
     }
@@ -204,10 +207,10 @@ public class Building : MonoBehaviour, IPointerDownHandler
     {
         if (IsSettled())
         {
-            sprite.color = Color.blue;
+            sprite.color = settleColor;
         } else if (selected && !IsValidPlacement())
         {
-            sprite.color = Color.red;
+            sprite.color = invalidColor;
         } else
         {
             sprite.color = Color.white;
