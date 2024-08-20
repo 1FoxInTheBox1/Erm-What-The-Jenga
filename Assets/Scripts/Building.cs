@@ -1,15 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using ExtensionMethods;
-using System.IO;
-using UnityEngine.EventSystems;
+using UnityEngine;
 using UnityEngine.Events;
-using Unity.VisualScripting;
-using Unity.Mathematics;
-using UnityEngine.UIElements;
-using System.Buffers.Text;
+using UnityEngine.EventSystems;
 
 public class Building : MonoBehaviour, IPointerDownHandler
 {
