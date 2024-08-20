@@ -8,14 +8,13 @@ using UnityEngine.EventSystems;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using UnityEngine.SceneManagement;
-
-// TODO: Why am i getting:
-// "UnassignedReferenceException: The variable planePrefab of GameManager has not been assigned.
-// You probably need to assign the planePrefab variable of the GameManager script in the inspector."
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject planePrefab;
+    [SerializeField]
+    TMP_Text scoreText;
 
     GameObject[] buildings;
     GameObject[] planes;
@@ -26,16 +25,13 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     float gameOverTimer = 5;
     bool isInGameOver = false;
-    public uint TotalScore
-    {
-        get { return TotalScore; }
-        set { TotalScore = value; }
-    }
+    public uint TotalScore;
     
     public void CalculateTotalScore(){
         uint score = 0;
         foreach(var layer in layers){
-            score += layer.LayerScore;
+            // score += layer.LayerScore;
+            score += 1;
         }
         TotalScore = score;
     }
@@ -58,12 +54,15 @@ public class GameManager : MonoBehaviour
     {
         if (currentLayer.IsSettled())
         {
+            CalculateTotalScore();
             NewLayer();
         }
         // If the game is over then decrease the time until reset
         if (isInGameOver) gameOverTimer -= Time.deltaTime;
         // If the game over timer is less than 0 then load the title screen
         if (gameOverTimer <= 0) SceneManager.LoadScene(0);
+
+        scoreText.SetText("Layers Built: " + TotalScore);
         
         CheckGameOver();
     }
