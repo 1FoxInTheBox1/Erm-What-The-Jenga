@@ -34,6 +34,7 @@ public class Building : MonoBehaviour, IPointerDownHandler
     public Rigidbody2D rb;
     private Collider2D col;
     private Camera cam;
+    [SerializeField]
     private SpriteRenderer sprite;
     private AudioSource audioSource;
 
@@ -43,7 +44,6 @@ public class Building : MonoBehaviour, IPointerDownHandler
         cam = Camera.main;
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
-        sprite = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
         rb.gravityScale = 0;
