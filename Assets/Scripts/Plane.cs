@@ -23,7 +23,7 @@ public class Plane : MonoBehaviour
         {
             Camera cam = Camera.main;
             // Set camera's target position to the plane's pos + offset
-            cam.GetComponent<CameraFollow>().setTarget(transform.position + new Vector3(0, camOffset, 0));
+            cam.GetComponent<CameraFollow>().moveToNewLayer(transform.position + new Vector3(0, camOffset, 0));
             GameManager gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
             // Display the selection bar
             gm.currentLayer.DisplaySelectionBar();

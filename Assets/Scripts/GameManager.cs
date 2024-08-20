@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour
     public List<Layer> layers;
     public Layer currentLayer;
     Camera cam;
+
+    [SerializeField]
+    float gameOverTimer = 5;
+    bool isInGameOver = false;
     public uint TotalScore
     {
         get { return TotalScore; }
@@ -56,6 +60,11 @@ public class GameManager : MonoBehaviour
         {
             NewLayer();
         }
+        // If the game is over then decrease the time until reset
+        if (isInGameOver) gameOverTimer -= Time.deltaTime;
+        // If the game over timer is less than 0 then load the title screen
+        if (gameOverTimer <= 0) SceneManager.LoadScene(0);
+        
         CheckGameOver();
     }
 
@@ -134,14 +143,20 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private bool DidAPlaneFallOff(){
-        if(layers.Count <= 1) return false;
+    private bool DidAPlaneFallOff(out GameObject plane){
+        if (layers.Count <= 1)
+        {
+            plane = GameObject.FindGameObjectWithTag("Starting Plane");
+            return false;
+        }
 
-        for(int i = 1; i < layers.Count-1; i++){
+        for(int i = 1; i < layers.Count; i++){
             if(layers[i].plane.transform.position.y < layers[i-1].plane.transform.position.y){
+                plane = layers[i].plane;
                 return true;
             }
         }
+        plane = null;
         return false;
     }
     
@@ -151,31 +166,37 @@ public class GameManager : MonoBehaviour
         if (layers.Count > 3)
         {
             // Loop through the subset of layers
-            for (int i = layers.Count - 3; i < layers.Count - 1; i++)
+            for (int i = layers.Count - 3; i < layers.Count; i++)
             {
                 // Access each layer in the subset
                 var layer = layers[i];
-                if(layer.DidABuildingFallOff(layer.plane)){
-                    // Does this go back to title screen?
-                    SceneManager.LoadScene(0);
+                if (layer.DidABuildingFallOff(layer.plane, out Building fallenBuilding)){
+                    ShowGameOver(fallenBuilding.transform.position);
                 }
             }
         }
         else{
             foreach(var layer in layers){
-                if(layer.DidABuildingFallOff(layer.plane)){
-                    SceneManager.LoadScene(0);
+                if (layer.DidABuildingFallOff(layer.plane, out Building fallenBuilding)){
+                    ShowGameOver(fallenBuilding.transform.position);
                 }
             }
         }
         foreach(var layer in layers){
-            if(layer.IsABuildingBelowTheStartingPlane()){
-                SceneManager.LoadScene(0);
+            if(layer.IsABuildingBelowTheStartingPlane(out Building fallenBuilding)){
+                ShowGameOver(fallenBuilding.transform.position);
             }
         }
-        if(DidAPlaneFallOff()){
-            SceneManager.LoadScene(0);
+        if(DidAPlaneFallOff(out GameObject plane)){
+            ShowGameOver(plane.transform.position);
         }
+    }
+
+    void ShowGameOver(Vector3 endPosition)
+    {
+        GameObject.FindGameObjectWithTag("BuildArea").GetComponent<SpriteRenderer>().enabled = false;
+        Camera.main.GetComponent<CameraFollow>().followGameOver(endPosition);
+        isInGameOver = true;
     }
 }
 
@@ -254,22 +275,26 @@ public class Layer
     }
 
     // Checks if a building is below the starting plane
-    public bool IsABuildingBelowTheStartingPlane(){
+    public bool IsABuildingBelowTheStartingPlane(out Building fallenBuilding){
         foreach(var building in buildings){
-            if(building.transform.position.y < -10 && building.isPlaced){
+            if(building.transform.position.y < -20 && building.isPlaced){
+                fallenBuilding = building;
                 return true;
             }
         }
+        fallenBuilding = null;
         return false;
     }
 
-    public bool DidABuildingFallOff(GameObject plane){
+    public bool DidABuildingFallOff(GameObject plane, out Building fallenBuilding){
         foreach(var building in buildings){
             if(building.FellOff(plane.transform.position)){
                 // kcik player back to title screen
+                fallenBuilding = building;
                 return true;
             }
         }
+        fallenBuilding = null;
         return false;
     }
 }

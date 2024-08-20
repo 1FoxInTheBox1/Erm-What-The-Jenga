@@ -573,6 +573,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planePrefab: {fileID: 2919467505417810197, guid: 1f0d04568dfbf674da91b68443d5b030, type: 3}
+  gameOverTimer: 4
 --- !u!4 &1489107194
 Transform:
   m_ObjectHideFlags: 0
