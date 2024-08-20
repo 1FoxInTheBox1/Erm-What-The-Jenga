@@ -143,6 +143,7 @@ public class GameManager : MonoBehaviour
 
     }
 
+    // Checks if a plane fell below the previous plane
     private bool DidAPlaneFallOff(out GameObject plane){
         if (layers.Count <= 1)
         {
@@ -160,6 +161,7 @@ public class GameManager : MonoBehaviour
         return false;
     }
     
+    // Checks if the game should end
     void CheckGameOver()
     {
         // Check if there are more than three layers
@@ -192,6 +194,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Zooms out camera and centers it on the fallen object
+    // Also starts a timer that will send the player back to title screen when it ends
     void ShowGameOver(Vector3 endPosition)
     {
         GameObject.FindGameObjectWithTag("BuildArea").GetComponent<SpriteRenderer>().enabled = false;
@@ -286,10 +290,10 @@ public class Layer
         return false;
     }
 
+    // Checks if a building fell below its plane
     public bool DidABuildingFallOff(GameObject plane, out Building fallenBuilding){
         foreach(var building in buildings){
             if(building.FellOff(plane.transform.position)){
-                // kcik player back to title screen
                 fallenBuilding = building;
                 return true;
             }
