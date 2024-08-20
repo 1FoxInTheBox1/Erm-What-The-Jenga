@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
         // If the game over timer is less than 0 then load the title screen
         if (gameOverTimer <= 0) SceneManager.LoadScene(0);
 
-        scoreText.SetText("Layers Built: " + TotalScore);
+        scoreText.SetText(TotalScore.ToString());
         
         CheckGameOver();
     }
