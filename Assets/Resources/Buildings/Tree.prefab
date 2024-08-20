@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8448444876868944131
+--- !u!1 &4158632194987298170
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,41 +8,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 767434232695106612}
-  - component: {fileID: 6829163827726001299}
-  - component: {fileID: 1827288636555755462}
-  - component: {fileID: 6272267471262029125}
-  - component: {fileID: 2081841325873204914}
-  - component: {fileID: -1231647979657532953}
+  - component: {fileID: 679314833302166119}
+  - component: {fileID: 7438082758528603685}
   m_Layer: 0
-  m_Name: Tree
-  m_TagString: Building
+  m_Name: Sprite
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &767434232695106612
+--- !u!4 &679314833302166119
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8448444876868944131}
+  m_GameObject: {fileID: 4158632194987298170}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.6698376, y: -0.15564439, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 767434232695106612}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &6829163827726001299
+--- !u!212 &7438082758528603685
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8448444876868944131}
+  m_GameObject: {fileID: 4158632194987298170}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -88,6 +84,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &8448444876868944131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 767434232695106612}
+  - component: {fileID: 1827288636555755462}
+  - component: {fileID: 6272267471262029125}
+  - component: {fileID: 2081841325873204914}
+  - component: {fileID: -1231647979657532953}
+  m_Layer: 0
+  m_Name: Tree
+  m_TagString: Building
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &767434232695106612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8448444876868944131}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.6698376, y: -0.15564439, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 679314833302166119}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1827288636555755462
 Rigidbody2D:
   serializedVersion: 4
@@ -151,7 +183,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.73, y: 2.55}
+    oldSize: {x: 3.28, y: 4.72}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -159,37 +191,29 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.4959929, y: -0.28473443}
-      - {x: 0.61411875, y: -0.17705873}
-      - {x: 0.64191186, y: -0.13794248}
-      - {x: 0.73853, y: -0.008236263}
-      - {x: 0.80720687, y: 0.15058875}
-      - {x: 0.82132447, y: 0.27602938}
-      - {x: 0.8110305, y: 0.55264753}
-      - {x: 0.7282362, y: 0.7833832}
-      - {x: 0.66441244, y: 0.89191186}
-      - {x: 0.49235356, y: 1.0564712}
-      - {x: 0.3064713, y: 1.1602949}
-      - {x: 0.1623537, y: 1.2010306}
-      - {x: -0.030206084, y: 1.219501}
-      - {x: -0.22411871, y: 1.1979425}
+    - - {x: 0.05624807, y: -1.6943269}
+      - {x: 0.2677439, y: -1.6950811}
+      - {x: 0.24433434, y: -0.7252726}
+      - {x: 0.64456135, y: -0.40963382}
+      - {x: 0.7851809, y: -0.10949993}
+      - {x: 1.0414791, y: 0.29544744}
+      - {x: 0.9746435, y: 0.6901113}
+      - {x: 0.6580108, y: 0.96008885}
+      - {x: 0.57453483, y: 1.2084862}
+      - {x: 0.32113963, y: 1.3790221}
+      - {x: -0.10193193, y: 1.3428994}
+      - {x: -0.29640543, y: 1.1316797}
       - {x: -0.53205985, y: 1.0448544}
       - {x: -0.67338306, y: 0.9172068}
-      - {x: -0.79588383, y: 0.71779436}
-      - {x: -0.84750056, y: 0.5594138}
+      - {x: -0.84407514, y: 0.7147822}
       - {x: -0.8644568, y: 0.42292756}
-      - {x: -0.83823633, y: 0.145}
-      - {x: -0.79588383, y: 0.037794348}
       - {x: -0.7020598, y: -0.1116181}
       - {x: -0.52132434, y: -0.290295}
-      - {x: -0.34750077, y: -0.38206002}
-      - {x: -0.20808811, y: -0.42485437}
-      - {x: -0.155, y: -0.45499998}
-      - {x: -0.155, y: -1.275}
-      - {x: 0.114999995, y: -1.275}
-      - {x: 0.114999995, y: -0.45499998}
-      - {x: 0.15264753, y: -0.4323538}
-      - {x: 0.26824477, y: -0.4079793}
+      - {x: -0.39294398, y: -0.4399403}
+      - {x: -0.15801194, y: -0.509215}
+      - {x: -0.1440276, y: -0.54912007}
+      - {x: -0.098848596, y: -0.689932}
+      - {x: 0.06644383, y: -0.85374784}
   m_UseDelaunayMesh: 0
 --- !u!114 &2081841325873204914
 MonoBehaviour:
@@ -220,7 +244,10 @@ MonoBehaviour:
   buildingFall:
     m_PersistentCalls:
       m_Calls: []
-  rb: {fileID: 0}
+  settleColor: {r: 0.6313726, g: 0.93333334, b: 1, a: 1}
+  invalidColor: {r: 1, g: 0, b: 0, a: 1}
+  rb: {fileID: 1827288636555755462}
+  sprite: {fileID: 7438082758528603685}
 --- !u!82 &-1231647979657532953
 AudioSource:
   m_ObjectHideFlags: 0
